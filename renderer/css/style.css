@@ -1,0 +1,539 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+               "Microsoft YaHei", sans-serif;
+  background: linear-gradient(160deg, #1e1e2e 0%, #2a2a3e 100%);
+  color: #e6e6f0;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 22px 16px;
+  overflow-y: auto;
+}
+
+.app-shell::-webkit-scrollbar { width: 6px; }
+.app-shell::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+/* ---------- 头部 ---------- */
+.app-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.header-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+}
+
+.mode-switch {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.mode-btn {
+  padding: 6px 18px;
+  font-size: 12px;
+  border-radius: 999px;
+  color: #9999aa;
+  transition: all 0.2s;
+}
+
+.mode-btn.is-active {
+  background: rgba(255, 122, 122, 0.18);
+  color: #ff7a7a;
+}
+
+/* ---------- 计时区 ---------- */
+.timer-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.ring-wrap {
+  position: relative;
+  width: 240px;
+  height: 240px;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 6;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: #ff7a7a;
+  stroke-width: 6;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(255, 122, 122, 0.45));
+  transition: stroke-dashoffset 0.25s linear, stroke 0.3s;
+}
+
+.ring-progress.is-countup {
+  stroke: #7ac6ff;
+  filter: drop-shadow(0 0 6px rgba(122, 198, 255, 0.45));
+}
+
+.ring-progress.is-break {
+  stroke: #4ec97d;
+  filter: drop-shadow(0 0 6px rgba(78, 201, 125, 0.45));
+}
+
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.big-time {
+  font-size: 56px;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.state-label {
+  font-size: 12px;
+  color: #9999aa;
+  letter-spacing: 1px;
+}
+
+/* ---------- 时长预设 ---------- */
+.duration-presets {
+  display: flex;
+  gap: 8px;
+}
+
+.duration-presets.is-hidden {
+  display: none;
+}
+
+.preset-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #aaaabb;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.preset-btn.is-active {
+  background: rgba(255, 122, 122, 0.18);
+  color: #ff7a7a;
+}
+
+.preset-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- 控制按钮 ---------- */
+.controls {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 28px;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #ff7a7a;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(255, 122, 122, 0.3);
+}
+
+.btn-primary:hover {
+  background: #ff8e8e;
+  transform: translateY(-1px);
+}
+
+.btn-primary.is-running {
+  background: #ffa84a;
+  box-shadow: 0 4px 12px rgba(255, 168, 74, 0.3);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ccccdd;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- 当前任务条 ---------- */
+.active-task {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+}
+
+.active-task-label {
+  color: #9999aa;
+  flex-shrink: 0;
+}
+
+.active-task-title {
+  color: #e6e6f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.active-task.is-empty .active-task-title {
+  color: #6c6c7c;
+  font-style: italic;
+}
+
+/* ---------- 统计面板 ---------- */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.stat-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ff7a7a;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #9999aa;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- 任务清单 ---------- */
+.tasks-section {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.tasks-header h2 {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ccccdd;
+  letter-spacing: 0.5px;
+}
+
+.btn-mini {
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: rgba(255, 122, 122, 0.15);
+  color: #ff7a7a;
+  transition: all 0.2s;
+}
+
+.btn-mini:hover {
+  background: rgba(255, 122, 122, 0.25);
+}
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.task-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.task-item.is-active {
+  background: rgba(255, 122, 122, 0.1);
+  border-color: rgba(255, 122, 122, 0.35);
+}
+
+.task-item.is-done {
+  opacity: 0.5;
+}
+
+.task-item.is-done .task-title {
+  text-decoration: line-through;
+  color: #9999aa;
+}
+
+.task-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid #6c6c7c;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.task-item.is-active .task-check {
+  border-color: #ff7a7a;
+}
+
+.task-item.is-done .task-check {
+  background: #4ec97d;
+  border-color: #4ec97d;
+}
+
+.task-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 13px;
+  color: #e6e6f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-meta {
+  font-size: 11px;
+  color: #9999aa;
+  margin-top: 2px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+.task-action-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 4px;
+  color: #9999aa;
+}
+
+.task-action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e6e6f0;
+}
+
+.task-action-btn.is-danger:hover {
+  background: rgba(255, 90, 90, 0.18);
+  color: #ff7a7a;
+}
+
+.tasks-empty {
+  text-align: center;
+  font-size: 12px;
+  color: #6c6c7c;
+  padding: 20px 0;
+}
+
+.tasks-empty.hidden { display: none; }
+
+/* ---------- 弹层 ---------- */
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal-mask.hidden { display: none; }
+
+.modal {
+  width: 320px;
+  background: #2a2a3e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.modal h3 {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: #9999aa;
+}
+
+.modal input,
+.modal textarea {
+  font: inherit;
+  color: #e6e6f0;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px 10px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.15s;
+}
+
+.modal input:focus,
+.modal textarea:focus {
+  border-color: rgba(255, 122, 122, 0.5);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-settings {
+  padding: 4px 12px;
+}
+
+.checkbox-row {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 10px !important;
+  color: #ccccdd !important;
+}
+
+.checkbox-row input {
+  width: 16px;
+  height: 16px;
+  accent-color: #ff7a7a;
+  flex-shrink: 0;
+}
+
+/* ---------- 底部 ---------- */
+.app-footer {
+  text-align: center;
+  font-size: 11px;
+  color: #6c6c7c;
+  padding-top: 10px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}

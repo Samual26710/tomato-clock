@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>番茄钟</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div class="header-topline">
+        <h1>🍅 番茄钟</h1>
+        <button class="btn btn-mini btn-settings" id="btn-open-settings">设置</button>
+      </div>
+      <div class="mode-switch" role="tablist" aria-label="计时模式">
+        <button class="mode-btn is-active" data-mode="countdown" role="tab">倒计时</button>
+        <button class="mode-btn" data-mode="countup" role="tab">正计时</button>
+      </div>
+    </header>
+
+    <section class="timer-section">
+      <!-- 当前任务条 -->
+      <div class="active-task" id="active-task">
+        <span class="active-task-label">当前任务</span>
+        <span class="active-task-title" id="active-task-title">未选择，点下方任务即可</span>
+      </div>
+
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="ring-track" cx="100" cy="100" r="92" />
+          <circle class="ring-progress" cx="100" cy="100" r="92"
+                  pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" />
+        </svg>
+        <div class="ring-center">
+          <div class="big-time" id="time-display">25:00</div>
+          <div class="state-label" id="state-label">准备开始</div>
+        </div>
+      </div>
+
+      <div class="duration-presets" id="duration-presets">
+        <button class="preset-btn is-active" data-seconds="1500">25 分</button>
+        <button class="preset-btn" data-seconds="3000">50 分</button>
+        <button class="preset-btn" data-seconds="300">5 分</button>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-primary" id="btn-toggle">开始</button>
+        <button class="btn btn-ghost" id="btn-reset">重置</button>
+      </div>
+    </section>
+
+    <!-- 统计面板 -->
+    <section class="stats-section">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-today-focus">0m</div>
+        <div class="stat-label">今日专注</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-today-pomodoros">0</div>
+        <div class="stat-label">今日番茄</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-week-focus">0m</div>
+        <div class="stat-label">本周累计</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-streak">0</div>
+        <div class="stat-label">连续天数</div>
+      </div>
+    </section>
+
+    <!-- 任务清单 -->
+    <section class="tasks-section">
+      <div class="tasks-header">
+        <h2>📋 任务清单</h2>
+        <button class="btn btn-mini" id="btn-add-task">+ 新建</button>
+      </div>
+      <ul class="task-list" id="task-list"></ul>
+      <p class="tasks-empty" id="tasks-empty">还没有任务，点"新建"添加一个</p>
+    </section>
+
+    <footer class="app-footer">
+      <span id="boot-hint">就绪</span>
+    </footer>
+  </main>
+
+  <!-- 新建/编辑任务的弹层 -->
+  <div class="modal-mask hidden" id="task-modal">
+    <div class="modal">
+      <h3 id="task-modal-title">新建任务</h3>
+      <label>
+        标题
+        <input type="text" id="input-title" maxlength="60" placeholder="例如：写技术文档" />
+      </label>
+      <label>
+        预估番茄数
+        <input type="number" id="input-estimate" min="1" max="20" value="1" />
+      </label>
+      <label>
+        备注（可选）
+        <textarea id="input-note" rows="2" maxlength="200" placeholder="补充说明…"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-modal-cancel">取消</button>
+        <button class="btn btn-primary" id="btn-modal-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置弹层 -->
+  <div class="modal-mask hidden" id="settings-modal">
+    <div class="modal">
+      <h3>番茄设置</h3>
+      <label>
+        专注时长（分钟）
+        <input type="number" id="input-focus-duration" min="1" max="180" value="25" />
+      </label>
+      <label>
+        短休息时长（分钟）
+        <input type="number" id="input-short-break" min="1" max="60" value="5" />
+      </label>
+      <label>
+        长休息时长（分钟）
+        <input type="number" id="input-long-break" min="1" max="120" value="15" />
+      </label>
+      <label class="checkbox-row">
+        <input type="checkbox" id="input-auto-start-break" />
+        <span>专注结束后自动开始休息</span>
+      </label>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-settings-cancel">取消</button>
+        <button class="btn btn-primary" id="btn-settings-save">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/timer.js"></script>
+  <script src="./js/tasks.js"></script>
+  <script src="./js/statistics.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
