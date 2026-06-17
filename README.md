@@ -18,23 +18,8 @@
 
 仓库中已经包含 Windows 打包产物，可以直接尝试：
 
-- 安装版：`release/番茄钟-0.1.0-x64.exe`
-- 便携版：`release-portable/番茄钟-0.1.0-x64-portable.exe`
-
-### 从源码启动
-
-先确保本机已安装 Node.js，然后在项目根目录执行：
-
-```bash
-npm install
-npm start
-```
-
-### 打包应用
-
-```bash
-npm run pack
-npm run dist:win
+- 安装版与便携版都已在releases中打包
+  
 ```
 
 ## 使用方式
