@@ -20,7 +20,6 @@
 
 - 安装版：`release/番茄钟-0.1.0-x64.exe`
 - 便携版：`release-portable/番茄钟-0.1.0-x64-portable.exe`
-- 解压运行版：`release/win-unpacked/番茄钟.exe`
 
 ### 从源码启动
 
